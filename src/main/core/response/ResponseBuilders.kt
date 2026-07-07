@@ -2,6 +2,7 @@ package br.com.arml.core.response
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onStart
 
 /**
  * Encapsulates a suspend operation in a [Flow] that emits [Response] states.
@@ -9,13 +10,13 @@ import kotlinx.coroutines.flow.flow
 fun <T> asResponse(
     block: suspend () -> T
 ): Flow<Response<T>> = flow {
-    emit(Response.Loading)
-    try {
-        emit(Response.Success(block()))
+    val response = try {
+        Response.Success(block())
     } catch (e: Exception) {
-        emit(Response.Failure(e))
+        Response.Failure(e)
     }
-}
+    emit(response)
+}.onStart { emit(Response.Loading) }
 
 /**
  * Executes a suspend operation and returns a [Response].

@@ -15,8 +15,8 @@ fun <T> Flow<T>.toResponseFlow(): Flow<Response<T>> {
         .map<T, Response<T>> { data -> Response.Success(data) }
         .onStart { emit(Response.Loading) }
         .catch { error ->
-            val exception =
-                error as? Exception ?: RuntimeException("Flow encountered an error", error)
+            val exception = error as? Exception
+                ?: RuntimeException("Flow encountered an error", error)
             emit(Response.Failure(exception))
         }
 }
@@ -24,15 +24,9 @@ fun <T> Flow<T>.toResponseFlow(): Flow<Response<T>> {
 /**
  * Allows transforming data inside a [Response.Success] while keeping Loading and Failure states.
  */
-fun <T, R> Flow<Response<T>>.mapSuccess(transform: (T) -> R): Flow<Response<R>> {
-    return this.map { response ->
-        when (response) {
-            is Response.Success -> Response.Success(transform(response.result))
-            is Response.Failure -> response
-            is Response.Loading -> response
-        }
-    }
-}
+fun <T, R> Flow<Response<T>>.mapSuccess(
+    transform: (T) -> R
+): Flow<Response<R>> = this.map { response -> response.mapTo(transform) }
 
 /**
  * Updates a [MutableStateFlow] with the current [Response] state.
