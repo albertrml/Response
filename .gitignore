@@ -1,0 +1,74 @@
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### IntelliJ IDEA ###
+.idea/
+# Exceções para .idea (se você quiser versionar configurações de run/debug ou workspace)
+# !.idea/runConfigurations/
+# !.idea/workspace.xml
+.idea/modules.xml
+.idea/jarRepositories.xml
+.idea/compiler.xml
+.idea/libraries/
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### Kotlin ###
+.kotlin
+kotlin-build/
+kapt/
+
+### Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+### Mac OS ###
+.DS_Store
+
+# Arquivos de build e temporários adicionais
+captures/
+generated/
+tmp/
+
+# Arquivos de configuração local
+local.properties
+*.jks
+*.keystore
+
+# Logs e arquivos de crash
+*.log
+*.log.*
+hs_err_pid*
+
+# Artefatos de build
+*.jar
+*.war
+*.aar
+*.apk
+*.aab
+*.class
