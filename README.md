@@ -42,13 +42,10 @@ dependencyResolutionManagement {
         mavenCentral()
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/SeuUsuario/NomeDoRepositorio")
+            url = uri("https://maven.pkg.github.com/albertrml/Response")
             credentials {
-                // Para repositórios públicos, você ainda pode precisar de um ‘token’
-                // se o Gradle não conseguir autenticar automaticamente.
-                // Para repositórios privados, um PAT com permissão 'read:packages' é obrigatório.
-                username = System.getenv("GITHUB_ACTOR") // Ou project.findProperty("gpr.user") as String?
-                password = System.getenv("GPR_PUBLISH_TOKEN") // Ou project.findProperty("gpr.key") as String?
+                username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR")
+                password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
             }
         }
     }
