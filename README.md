@@ -48,13 +48,12 @@ dependencyResolutionManagement {
                 // se o Gradle não conseguir autenticar automaticamente.
                 // Para repositórios privados, um PAT com permissão 'read:packages' é obrigatório.
                 username = System.getenv("GITHUB_ACTOR") // Ou project.findProperty("gpr.user") as String?
-                password = System.getenv("GITHUB_TOKEN") // Ou project.findProperty("gpr.key") as String?
+                password = System.getenv("GPR_PUBLISH_TOKEN") // Ou project.findProperty("gpr.key") as String?
             }
         }
     }
 }
 ```
-**Importante**: Para repositórios privados, você precisará de um Personal Access Token (PAT) do GitHub com permissão `read:packages`.
 
 ### 2. Adicionar a dependência no seu `build.gradle.kts`
 
