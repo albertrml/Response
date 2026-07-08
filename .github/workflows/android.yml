@@ -22,6 +22,9 @@
         - name: Grant execute permission for gradlew
           run: chmod +x gradlew
 
+        - name: List gradle wrapper contents # Adicione este passo para depuração
+          run: ls -la gradle/wrapper
+          
         - name: Build with Gradle
           run: ./gradlew build
 
@@ -30,4 +33,3 @@
           with:
             name: app-release-aab
             path: app/build/outputs/bundle/release/app-release.aab # Ajuste o caminho conforme seu projeto
-    
