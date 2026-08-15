@@ -1,0 +1,21 @@
+[versions]
+kotlin = "2.4.0"
+compose-plugin = "2.4.0"
+compose-runtime = "1.7.6"
+coroutines = "1.11.0"
+junit = "4.13.2"
+mockk = "1.14.11"
+junit-vintage = "5.11.3"
+
+[libraries]
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
+androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "compose-runtime" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+junit-vintage-engine = { group = "org.junit.vintage", name = "junit-vintage-engine", version.ref = "junit-vintage" }
+
+[plugins]
+kotlin-jvm-plugin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-compose-plugin = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "compose-plugin" }

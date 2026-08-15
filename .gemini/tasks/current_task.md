@@ -6,4 +6,4 @@
 - [x] Criar estrutura de diretórios (.gemini/core, skills, tasks, roadmap)
 - [x] Mover Roadmap de v0.1.x para a pasta correta
 - [x] Criar arquivo de configuração central (config.md)
-- [ ] Iniciar v0.1.1 da API Response (Próximo passo)
+- [ ] Iniciar v0.1.0 da API Response: Refatoração Multi-modular (Próximo passo)
