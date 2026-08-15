@@ -1,9 +1,9 @@
-# Task Atual: Setup de Infraestrutura .gemini
-**Status**: Em andamento
-**Objetivo**: Organizar a estrutura de automação do projeto.
+# Task Atual: Início do Marco da Ergonomia (v0.1.2)
+**Status**: Planejamento
+**Objetivo**: Implementar operadores funcionais fluídos (map, mapError, onSuccess, onFailure) e tipagem de erro aprimorada.
 
 ## Checklist
-- [x] Criar estrutura de diretórios (.gemini/core, skills, tasks, roadmap)
-- [x] Mover Roadmap de v0.1.x para a pasta correta
-- [x] Criar arquivo de configuração central (config.md)
-- [ ] Iniciar v0.1.0 da API Response: Refatoração Multi-modular (Próximo passo)
+- [ ] Refinar design dos operadores funcionais (Grill-me)
+- [ ] Definir estrutura do ErrorReason (Network, Server, Business, Unknown)
+- [ ] Implementar State Recovery no estado Failure
+- [ ] Criar PRD da v0.1.2

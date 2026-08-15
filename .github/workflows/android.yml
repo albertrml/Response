@@ -24,10 +24,10 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build and Test All Modules
-        run: ./gradlew test assemble
+        run: ./gradlew test assemble -PcomposeCompilerMetrics=true
 
       - name: Verify Core Module
         run: ./gradlew :core:test :core:assemble
 
       - name: Verify Compose Module
-        run: ./gradlew :compose:test :compose:assemble
+        run: ./gradlew :compose:test :compose:assemble -PcomposeCompilerMetrics=true
