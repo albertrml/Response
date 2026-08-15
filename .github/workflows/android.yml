@@ -1,35 +1,33 @@
-    name: Android CI
+name: Android CI
 
-    on:
-      push:
-        branches: [ "main", "dev" ]
-      pull_request:
-        branches: [ "main", "dev" ]
+on:
+  push:
+    branches: [ "main", "dev" ]
+  pull_request:
+    branches: [ "main", "dev" ]
 
-    jobs:
-      build:
-        runs-on: ubuntu-latest
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-        steps:
-        - uses: actions/checkout@v4
-        - name: Set up JDK 17
-          uses: actions/setup-java@v4
-          with:
-            java-version: '17'
-            distribution: 'temurin'
-            cache: gradle
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
 
-        - name: Grant execute permission for gradlew
-          run: chmod +x gradlew
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
 
-        - name: List gradle wrapper contents # Adicione este passo para depuração
-          run: ls -la gradle/wrapper
-          
-        - name: Build with Gradle
-          run: ./gradlew build
+      - name: Build and Test All Modules
+        run: ./gradlew test assemble
 
-        - name: Upload aab as artifact
-          uses: actions/upload-artifact@v4
-          with:
-            name: app-release-aab
-            path: app/build/outputs/bundle/release/app-release.aab # Ajuste o caminho conforme seu projeto
+      - name: Verify Core Module
+        run: ./gradlew :core:test :core:assemble
+
+      - name: Verify Compose Module
+        run: ./gradlew :compose:test :compose:assemble

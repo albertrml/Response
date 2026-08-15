@@ -37,7 +37,7 @@ Ao concluir uma tarefa ou versão, você deve gerar os textos necessários, mas 
 3. **Texto para GitHub Release**: (Apenas em trocas de versão) Destaques técnicos estruturados sem emojis.
 4. **About this package**: Pitch técnico focado nos diferenciais para o GitHub Packages.
 5. **Changelog**: Histórico de versões.
-6. **Documentação**: Atualizar a documentação do projeto (API_DESIGN_GUIDELINES.md, API_MAP.md, ARCHITECTURE.md, GETTING_STARTED.md, MIGRATION_GUIDE.md e etc).
+6. **Documentação**: Atualizar a documentação do projeto (API_DESIGN_GUIDELINES.md, API_MAP.md, ARCHITECTURE.md, GETTING_STARTED.md, MIGRATION_GUIDE.md, README.md e etc).
 
 # REGRAS FINAIS
 - Trabalhe em apenas UMA tarefa por vez.
