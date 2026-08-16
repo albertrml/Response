@@ -25,41 +25,50 @@ Adicione a dependência no seu módulo `build.gradle.kts`:
 ```kotlin
 dependencies {
     // Para lógica pura (ViewModels/Repositories)
-    implementation("br.com.arml.response:response-core:0.1.0")
+    implementation("br.com.arml.response:response-core:0.1.2")
     
     // Para UI (Jetpack Compose)
-    implementation("br.com.arml.response:response-compose:0.1.0")
+    implementation("br.com.arml.response:response-compose:0.1.2")
 }
 ```
 
 ## 2. Uso Básico
 
 ### No Repositório
-Use o builder `asResponse` para transformar chamadas suspensas em fluxos de estado:
+Use o builder `asResponseFlow` para transformar chamadas suspensas em fluxos de estado inteligentes:
 
 ```kotlin
-fun fetchUser() = asResponse {
+fun fetchUser() = asResponseFlow {
     api.getUser() // chamada suspend
 }
 ```
 
 ### Na ViewModel
-Consuma o fluxo e converta para um estado de UI:
+Consuma o fluxo, adicione resiliência com `.withCache()` e converta para um estado de UI:
 
 ```kotlin
 val userState = repository.fetchUser()
-    .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), Response.Loading)
+    .withCache() // Mantém o cache durante atualizações
+    .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), Response.Loading())
 ```
 
 ### Na UI (Compose)
-Renderize o resultado de forma simples com `ShowResults`:
+Renderize o resultado e reaja a falhas de forma semântica:
 
 ```kotlin
 val state by viewModel.userState.collectAsState()
 
 state.ShowResults(
-    loadingContent = { CircularProgressIndicator() },
-    successContent = { user -> Text("Olá, ${user.name}") },
-    failureContent = { error -> Text("Erro: ${error.message}") }
+    loadingContent = { cache -> 
+        // Se houver cache, você pode mostrar a lista antiga com um loading sutil
+        if (cache != null) UserList(cache, isLoading = true) else CircularProgressIndicator()
+    },
+    successContent = { user -> UserList(user) },
+    failureContent = { error, reason, cache -> 
+        if (reason is ErrorReason.Network) {
+            ShowToast("Sem conexão. Exibindo dados antigos.")
+        }
+        cache?.let { UserList(it) }
+    }
 )
 ```

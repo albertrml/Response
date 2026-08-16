@@ -2,33 +2,33 @@
 
 Este documento descreve os princípios de Engenharia de Software e padrões de design aplicados na construção da Response API.
 
-## 1. Imutabilidade por Padrão
-Toda estrutura de dados na API deve ser imutável.
-- Use `sealed class` para estados e `data class` ou `data object` para implementações.
-- Propriedades devem ser declaradas com `val`.
-- **Por que?** Garante previsibilidade em ambientes multi-thread e facilita a integração com o motor de recomposição do Jetpack Compose.
+## 1. Imutabilidade e Sealed Hierarchy
+Toda estrutura de dados na API deve ser imutável para garantir previsibilidade e performance no Compose.
+- `Success`, `Loading` e `Failure` são `data classes`.
+- **Por que?** Facilita o uso do método `.copy()` e garante que o compilador do Compose identifique mudanças de estado com precisão.
 
-## 2. Tipagem Genérica e Covariância
-A classe `Response<out T>` utiliza o modificador `out` para permitir covariância.
-- **Exemplo:** `Response<String>` pode ser atribuído a uma variável do tipo `Response<Any>`.
-- **Por que?** Aumenta a flexibilidade da biblioteca ao lidar com hierarquias de modelos.
+## 2. State Recovery (Princípio da Continuidade)
+Diferente de wrappers comuns, a Response API foca na continuidade da experiência do usuário.
+- Estados de transição (`Loading`) e erro (`Failure`) carregam o `previousData`.
+- **Regra:** Nunca descarte um dado válido a menos que um novo dado de sucesso chegue.
 
-## 3. Abordagem Funcional
-A API prioriza operadores funcionais em vez de verificações de tipo manuais (`is Success`).
-- Use `fold` para processar todos os estados de forma exaustiva.
-- Use `mapTo` para transformações de dados sem sair do fluxo da `Response`.
-- **Por que?** Reduz boilerplate e evita erros de lógica (como esquecer o estado de erro).
+## 3. Semantic Error Reasoning
+Evitamos o acoplamento da UI com tipos de `Exception`.
+- A API mapeia falhas para `ErrorReason` (`Network`, `Server`, `Business`, etc).
+- **Por que?** Permite que a camada de UI tome decisões de negócio (ex: retry, fallback) sem precisar conhecer bibliotecas de rede ou banco de dados.
 
-## 4. Integração com Coroutines e Flow
-A biblioteca foi desenhada para ser o elo entre a camada de Dados (Data) e a UI.
-- Extensões como `toResponseFlow()` facilitam a conversão de fluxos brutos.
-- `asResponse { ... }` gerencia automaticamente o ciclo de vida (Loading -> Success/Failure).
+## 4. Robustez com Throwable
+A biblioteca utiliza `Throwable` como base para todos os erros.
+- Capturamos e propagamos a causa raiz de qualquer falha técnica ou lógica.
+- **Vantagem:** Compatibilidade total com a Standard Library do Kotlin e Coroutines.
 
-## 5. Separação de Preocupações (SoC)
-- O motor lógico reside no módulo `:core` (Pure Kotlin).
-- Componentes visuais residem no módulo `:compose`.
-- **Regra de Ouro:** O módulo `:core` nunca deve depender de frameworks de UI.
+## 5. Abordagem Funcional e Fluída
+Priorizamos operadores funcionais que evitam o "Pyramid of Doom" de blocos `when`.
+- Operadores encadeáveis: `.onSuccess`, `.onFailure`, `.onRecover`.
+- Transformações inteligentes: `.mapTo` transforma o sucesso e o cache simultaneamente.
 
-## 6. Nomenclatura Semântica
-- Implementações de estado devem ser curtas e diretas: `Success`, `Failure`, `Loading`.
-- Operadores que transformam o dado interno devem seguir o padrão `map...` (ex: `mapTo`, `mapSuccess`).
+## 6. Nomenclatura Simétrica
+Seguimos os padrões do Kotlin para facilitar a descoberta:
+- `asResponse`: Operação única (One-shot).
+- `asResponseFlow`: Operação contínua (Stream).
+- `withCache`: Ativação de memória no fluxo.
