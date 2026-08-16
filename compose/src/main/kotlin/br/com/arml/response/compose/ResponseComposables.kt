@@ -2,6 +2,7 @@ package br.com.arml.response.compose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import br.com.arml.response.core.ErrorReason
 import br.com.arml.response.core.Response
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
@@ -19,24 +20,28 @@ import kotlin.time.Duration.Companion.milliseconds
 @Composable
 fun <T> Response<T>.ShowResults(
     successContent: @Composable (T) -> Unit = {},
-    loadingContent: @Composable () -> Unit = {},
-    failureContent: @Composable (Exception) -> Unit = {},
+    loadingContent: @Composable (cache: T?) -> Unit = {},
+    failureContent: @Composable (error: Throwable, reason: ErrorReason, cache: T?) -> Unit = { _, _, _ -> },
     actionOnSuccess: (T) -> Unit = {},
-    actionOnFailure: (Exception) -> Unit = {},
+    actionOnFailure: (error: Throwable, reason: ErrorReason, cache: T?) -> Unit = { _, _, _ -> },
     delay: Long = 500
 ) {
     LaunchedEffect(this) {
         if (delay > 0) delay(delay.milliseconds)
         when (this@ShowResults) {
             is Response.Success -> actionOnSuccess(this@ShowResults.result)
-            is Response.Failure -> actionOnFailure(this@ShowResults.exception)
+            is Response.Failure -> actionOnFailure(
+                this@ShowResults.error,
+                this@ShowResults.reason,
+                this@ShowResults.previousData
+            )
             else -> {}
         }
     }
 
     when (this) {
         is Response.Success -> successContent(this.result)
-        is Response.Loading -> loadingContent()
-        is Response.Failure -> failureContent(this.exception)
+        is Response.Loading -> loadingContent(this.previousData)
+        is Response.Failure -> failureContent(this.error, this.reason, this.previousData)
     }
 }

@@ -15,27 +15,25 @@ graph TD
 
 ### :core (Pure Kotlin)
 - **Natureza:** JVM/Kotlin Library.
-- **Responsabilidades:** Definição da sealed class `Response`, lógica de estados, operadores de Flow.
+- **Responsabilidades:** Motor de estados resilientes, lógica de `State Recovery`, operadores funcionais.
 - **Dependências:** `kotlinx-coroutines-core`.
 - **Restrição:** Proibido o uso de `android.*` ou dependências de UI.
 
 ### :compose (UI Integration)
 - **Natureza:** Android/Compose Library.
-- **Responsabilidades:** Composables, utilitários para o ciclo de vida do Compose, estabilidade de tipos.
+- **Responsabilidades:** Componentes inteligentes que reagem à resiliência do Core, estabilidade de tipos para o compilador do Compose.
 - **Dependências:** `:core`, `androidx.compose.runtime`, `kotlinx-coroutines-android`.
 
 ## 2. Decisões de Design Chave
 
-### Estabilidade do Compose
-Utilizamos um arquivo de configuração de estabilidade (`compose-stability.conf`) no módulo `:compose` para informar ao compilador que as classes do módulo `:core` (que não conhece o Compose) são estáveis. Isso evita recomposições desnecessárias na UI.
+### State Recovery Engine
+O coração da API é a capacidade de reter o último sucesso conhecido. Isso é implementado no `:core` e propagado automaticamente através da extensão `.withCache()`. 
 
-### Gestão de Dependências
-Utilizamos o **Gradle Version Catalog** (`libs.versions.toml`) para centralizar as versões das bibliotecas, garantindo que todos os módulos utilizem a mesma versão de Coroutines e Compose.
+### Semantic Error Mapping
+Utilizamos a interface `ErrorReason` para desacoplar a UI de implementações de rede ou persistência. Isso permite que a biblioteca seja usada em qualquer contexto (Mobile, Desktop, Server) mantendo a mesma semântica de erro.
 
-### Separação de Pacotes
-Os pacotes seguem a estrutura do módulo para evitar o problema de "Split Packages":
-- `br.com.arml.response.core.*`
-- `br.com.arml.response.compose.*`
+### Performance e Estabilidade
+Utilizamos o arquivo `compose-stability.conf` no módulo `:compose` para marcar as classes do `:core` como `@Stable`. Isso garante que o Jetpack Compose consiga pular recomposições quando o estado da `Response` não for alterado, mesmo sendo classes de um módulo puramente JVM.
 
-## 3. Publicação
-A API é preparada para ser publicada no **GitHub Packages**. A configuração de publicação é centralizada no `build.gradle.kts` raiz através do bloco `subprojects`, facilitando a adição de novos módulos no futuro.
+## 3. Gestão de Erros
+A biblioteca padroniza o uso de `Throwable`. Isso garante que erros de infraestrutura e exceções de negócio sejam tratados com o mesmo nível de rigor e facilitem o debug através da causa raiz preservada no estado `Failure`.
