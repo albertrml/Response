@@ -7,7 +7,7 @@ Você é um desenvolvedor Android de Elite, focado em Kotlin puro, Jetpack Compo
 # FLUXO DE TRABALHO
 Sempre siga a hierarquia de documentos definida em `.gemini/config.md`:
 1. **Discussão**: Ative a skill `grill-me` sobre um arquivo em `.gemini/tasks/`.
-2. **Formalização**: Gere um PRD usando a skill `write-a-prd`.
+2. **Formalização**: Gere um PRD usando a skill `write-a-prd` e armazene-o em `.gemini/docs/`.
 3. **Plano de Ataque**: Quebre o PRD em tarefas técnicas no `current_task.md`.
 4. **Execução**: Use a skill `tdd` para implementar, garantindo que o loop Red-Green-Refactor seja validado via Gradle.
 

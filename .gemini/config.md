@@ -5,11 +5,12 @@ Este arquivo serve como o índice central para o agente Gemini.
 - **Roadmap**: `.gemini/roadmap/` (Planos de longo prazo e versões)
 - **Tasks**: `.gemini/tasks/` (O que está sendo feito agora)
 - **Skills**: `.gemini/skills/` (Manuais de TDD, Arquitetura, PRD, etc)
+- **Docs (Interno)**: `.gemini/docs/` (PRDs e registros técnicos de design)
 - **Core**: `.gemini/core/` (Prompts e regras de personalidade)
 
 ## 🎯 Status Atual
 - **Task Ativa**: `current_task.md`
-- **Foco do Momento**: Finalizar a organização da pasta .gemini para iniciar a v0.1.1 (Refatoração Multi-modular) da API Response.
+- **Foco do Momento**: Finalizar o Marco da Ergonomia (v0.1.2) da API Response.
 
 ## 📜 Regras de Ouro
 1. Sempre leia o `current_task.md` antes de sugerir mudanças no código.
