@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import br.com.arml.response.core.ErrorReason
 import br.com.arml.response.core.Response
+import br.com.arml.response.core.ResponseMetadata
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -19,29 +20,30 @@ import kotlin.time.Duration.Companion.milliseconds
  */
 @Composable
 fun <T> Response<T>.ShowResults(
-    successContent: @Composable (T) -> Unit = {},
-    loadingContent: @Composable (cache: T?) -> Unit = {},
-    failureContent: @Composable (error: Throwable, reason: ErrorReason, cache: T?) -> Unit = { _, _, _ -> },
-    actionOnSuccess: (T) -> Unit = {},
-    actionOnFailure: (error: Throwable, reason: ErrorReason, cache: T?) -> Unit = { _, _, _ -> },
+    successContent: @Composable (data: T, metadata: ResponseMetadata?) -> Unit = { _, _ -> },
+    loadingContent: @Composable (cache: T?, metadata: ResponseMetadata?) -> Unit = { _, _ -> },
+    failureContent: @Composable (error: Throwable, reason: ErrorReason, cache: T?, metadata: ResponseMetadata?) -> Unit = { _, _, _, _ -> },
+    actionOnSuccess: (data: T, metadata: ResponseMetadata?) -> Unit = { _, _ -> },
+    actionOnFailure: (error: Throwable, reason: ErrorReason, cache: T?, metadata: ResponseMetadata?) -> Unit = { _, _, _, _ -> },
     delay: Long = 500
 ) {
     LaunchedEffect(this) {
         if (delay > 0) delay(delay.milliseconds)
         when (this@ShowResults) {
-            is Response.Success -> actionOnSuccess(this@ShowResults.result)
+            is Response.Success -> actionOnSuccess(this@ShowResults.result, this@ShowResults.metadata)
             is Response.Failure -> actionOnFailure(
                 this@ShowResults.error,
                 this@ShowResults.reason,
-                this@ShowResults.previousData
+                this@ShowResults.previousData,
+                this@ShowResults.metadata
             )
             else -> {}
         }
     }
 
     when (this) {
-        is Response.Success -> successContent(this.result)
-        is Response.Loading -> loadingContent(this.previousData)
-        is Response.Failure -> failureContent(this.error, this.reason, this.previousData)
+        is Response.Success -> successContent(this.result, this.metadata)
+        is Response.Loading -> loadingContent(this.previousData, this.metadata)
+        is Response.Failure -> failureContent(this.error, this.reason, this.previousData, this.metadata)
     }
 }

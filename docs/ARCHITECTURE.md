@@ -32,6 +32,9 @@ O coração da API é a capacidade de reter o último sucesso conhecido. Isso é
 ### Semantic Error Mapping
 Utilizamos a interface `ErrorReason` para desacoplar a UI de implementações de rede ou persistência. Isso permite que a biblioteca seja usada em qualquer contexto (Mobile, Desktop, Server) mantendo a mesma semântica de erro.
 
+### Pluggable Policy Architecture
+O sistema de metadados foi desenhado seguindo o padrão de **Composição sobre Herança**. Através da interface `ResponsePolicy`, desenvolvedores podem anexar múltiplas estratégias simultâneas ao envelope de metadados, como `PagePaginationPolicy` e `SyncPolicy`. Isso garante que a biblioteca seja agnóstica em relação à estratégia de dados do servidor.
+
 ### Performance e Estabilidade
 Utilizamos o arquivo `compose-stability.conf` no módulo `:compose` para marcar as classes do `:core` como `@Stable`. Isso garante que o Jetpack Compose consiga pular recomposições quando o estado da `Response` não for alterado, mesmo sendo classes de um módulo puramente JVM.
 

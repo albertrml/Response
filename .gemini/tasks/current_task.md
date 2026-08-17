@@ -1,13 +1,10 @@
-# Task Atual: Início do Marco da Ergonomia (v0.1.2)
-**Status**: Planejamento
-**Objetivo**: Implementar operadores funcionais fluídos (map, mapError, onSuccess, onFailure) e tipagem de erro aprimorada.
+# Task Atual: Marco da Inteligência de Dados (v0.1.3)
+**Status**: Planejamento / Design
+**Objetivo**: Implementar metadados de paginação, timestamping e persistência de contexto.
 
 ## Checklist
-- [x] Refinar design dos operadores funcionais (Grill-me)
-- [x] Criar PRD da v0.1.2 (docs/PRD-002-fluent-api-ergonomics.md)
-- [x] Definir estrutura do ErrorReason (Network, Server, Business, Unknown)
-- [x] Implementar State Recovery e Mudança de Assinatura (Response<T>)
-- [x] Implementar Operadores Fluídos (map, mapError, onSuccess, onFailure, onRecover)
-- [x] Atualizar Builders (asResponse, asResponseFlow) com suporte a cache
-- [x] Implementar extensão de fluxo withCache() para State Recovery automático
-- [x] Polimento e refatoração de design (Nomes simétricos e uso de when)
+- [ ] Refinar estrutura de ResponseMetadata (Grill-me)
+- [ ] Definir persistência de metadados durante transformações (.map)
+- [ ] Implementar PaginationMetadata (currentPage, hasMore, totalItems)
+- [ ] Implementar Timestamping automático
+- [ ] Criar PRD da v0.1.3

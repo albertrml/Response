@@ -25,10 +25,10 @@ Adicione a dependência no seu módulo `build.gradle.kts`:
 ```kotlin
 dependencies {
     // Para lógica pura (ViewModels/Repositories)
-    implementation("br.com.arml.response:response-core:0.1.2")
+    implementation("br.com.arml.response:response-core:0.1.3")
     
     // Para UI (Jetpack Compose)
-    implementation("br.com.arml.response:response-compose:0.1.2")
+    implementation("br.com.arml.response:response-compose:0.1.3")
 }
 ```
 
