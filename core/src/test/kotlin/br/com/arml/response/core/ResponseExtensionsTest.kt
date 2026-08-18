@@ -3,6 +3,7 @@ package br.com.arml.response.core
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class ResponseExtensionsTest {
@@ -52,5 +53,68 @@ class ResponseExtensionsTest {
         assertEquals(metadata, results[1].metadata)
         assertEquals("First", (results[2] as Response.Failure).previousData)
         assertEquals(metadata, results[2].metadata)
+    }
+
+    @Test
+    fun `withCache should not overwrite existing cache or metadata if already present`() = runTest {
+        val oldMeta = ResponseMetadata(extra = mapOf("version" to 1))
+        val newMeta = ResponseMetadata(extra = mapOf("version" to 2))
+        
+        val flow = flowOf(
+            Response.Success("Old Data", oldMeta),
+            Response.Loading(previousData = "New Cache", metadata = newMeta)
+        ).withCache()
+        
+        val results = flow.toList()
+        val loading = results[1] as Response.Loading
+        assertEquals("New Cache", loading.previousData)
+        assertEquals(newMeta, loading.metadata)
+    }
+
+    @Test
+    fun `zipWith combinations coverage`() {
+        val s1 = Response.Success(10)
+        val s2 = Response.Success(20)
+        val f1 = Response.Failure<Int>(RuntimeException("F1"))
+        val l1 = Response.Loading<Int>()
+
+        // Success + Success
+        assertEquals(30, (s1.zipWith(s2) { a, b -> a + b } as Response.Success).result)
+        
+        // Failure + Anything
+        assertTrue(f1.zipWith(s2) { a, b -> a + b } is Response.Failure)
+        assertTrue(f1.zipWith(l1) { a, b -> a + b } is Response.Failure)
+        
+        // Success + Failure
+        assertTrue(s1.zipWith(f1) { a, b -> a + b } is Response.Failure)
+        
+        // Loading combinations
+        assertTrue(l1.zipWith(s1) { a, b -> a + b } is Response.Loading)
+        assertTrue(s1.zipWith(l1) { a, b -> a + b } is Response.Loading)
+        assertTrue(l1.zipWith(l1) { a, b -> a + b } is Response.Loading)
+    }
+
+    @Test
+    fun `zipWith cache logic coverage`() {
+        val s1 = Response.Success(10)
+        val f1 = Response.Failure<Int>(RuntimeException(), previousData = 5)
+        val l1 = Response.Loading<Int>(previousData = 2)
+
+        // Zip two states with cache
+        val result = f1.zipWith(l1) { a, b -> a + b }
+        assertEquals(7, (result as Response.Failure).previousData)
+        
+        // Zip where one is null
+        val noCache = Response.Loading<Int>(previousData = null)
+        val resultNull = s1.zipWith(noCache) { a, b -> a + b }
+        assertEquals(null, (resultNull as Response.Loading).previousData)
+    }
+
+    @Test
+    fun `combineResponse should delegate to zipWith correctly`() = runTest {
+        val f1 = flowOf(Response.Success(1))
+        val f2 = flowOf(Response.Success(2))
+        val result = f1.combineResponse(f2) { a, b -> a + b }.toList()
+        assertEquals(Response.Success(3), result[0])
     }
 }

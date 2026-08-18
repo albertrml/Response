@@ -72,3 +72,9 @@ hs_err_pid*
 *.apk
 *.aab
 *.class
+
+# .gemini
+.gemini/docs/commits
+.gemini/docs/packages
+.gemini/docs/prs
+.gemini/docs/releases
