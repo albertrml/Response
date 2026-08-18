@@ -7,9 +7,17 @@ Este documento provê uma visão geral dos componentes, estados e relacionamento
 ### Estados (`Response<T>`)
 | Estado | Tipo | Descrição |
 | :--- | :--- | :--- |
-| `Loading<T>` | `data class` | Operação em andamento. Pode conter `previousData` (cache). |
-| `Success<T>` | `data class` | Sucesso. Contém o dado resultante (`result`). |
-| `Failure<T>` | `data class` | Falha. Contém o `error: Throwable`, `reason: ErrorReason` e `previousData`. |
+| `Loading<T>` | `data class` | Operação em andamento. Pode conter `previousData` (cache) e `metadata`. |
+| `Success<T>` | `data class` | Sucesso. Contém o dado resultante (`result`) e `metadata`. |
+| `Failure<T>` | `data class` | Falha. Contém o `error: Throwable`, `reason: ErrorReason`, `previousData` e `metadata`. |
+
+### Metadados e Políticas (`ResponseMetadata.kt`)
+A Response API utiliza um sistema de **Políticas (Policies)** para carregar contexto sem poluir seus modelos.
+- `ResponseMetadata`: Envelope que carrega o `timestamp`, dados `extra` e uma lista de `policies`.
+- `ResponsePolicy`: Interface marcadora para qualquer estratégia (Paginação, Sync, etc).
+- `PagePaginationPolicy`: Implementação para paginação baseada em páginas (`currentPage`, `hasMore`).
+- `CursorPaginationPolicy`: Estratégia baseada em cursores (`nextCursor`, `hasMore`).
+- `SyncPolicy`: Estratégia para sincronização de dados (`lastVersion`, `isDelta`).
 
 ### Construtores (`ResponseBuilders.kt`)
 - `asResponseFlow { block }`: Cria um `Flow<Response<T>>` que emite `Loading` e depois o resultado.
@@ -41,7 +49,7 @@ Este documento provê uma visão geral dos componentes, estados e relacionamento
 
 ## 3. Fluxo de Vida com State Recovery
 1. **Initial Trigger**: Chamada a `asResponseFlow`. Emite `Loading(null)`.
-2. **Success**: Recebe dados. Emite `Success(data)`.
-3. **Refresh**: Nova chamada com `.withCache()`. Emite `Loading(data)`. UI mantém dados antigos na tela.
-4. **Failure**: Erro de rede. Emite `Failure(error, Network, data)`. UI exibe erro sem esconder os dados.
-5. **Recovery**: Chamada a `.onRecover()`. Emite `Success(data)`. Fluxo restaurado.
+2. **Success**: Recebe dados. Emite `Success(data, metadata)`.
+3. **Refresh**: Nova chamada com `.withCache()`. Emite `Loading(data, metadata)`.
+4. **Failure**: Erro. Emite `Failure(error, Network, data, metadata)`.
+5. **Recovery**: Chamada a `.onRecover()`. Emite `Success(data, metadata)`.

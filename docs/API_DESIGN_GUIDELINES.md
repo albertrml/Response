@@ -27,7 +27,12 @@ Priorizamos operadores funcionais que evitam o "Pyramid of Doom" de blocos `when
 - Operadores encadeáveis: `.onSuccess`, `.onFailure`, `.onRecover`.
 - Transformações inteligentes: `.mapTo` transforma o sucesso e o cache simultaneamente.
 
-## 6. Nomenclatura Simétrica
+## 6. Pluggable Policies (Arquitetura Extensível)
+A biblioteca não tenta prever todas as necessidades de infraestrutura, mas oferece um mecanismo de extensão.
+- Use `ResponsePolicy` para anexar estratégias de paginação, sincronização ou segurança.
+- **Por que?** Permite que a API suporte desde simples listas paginadas até fluxos complexos de sincronização delta sem alterar o núcleo da biblioteca.
+
+## 7. Nomenclatura Simétrica
 Seguimos os padrões do Kotlin para facilitar a descoberta:
 - `asResponse`: Operação única (One-shot).
 - `asResponseFlow`: Operação contínua (Stream).
