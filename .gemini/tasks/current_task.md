@@ -1,10 +1,12 @@
-# Task Atual: Marco da Inteligência de Dados (v0.1.3)
-**Status**: Planejamento / Design
-**Objetivo**: Implementar metadados de paginação, timestamping e persistência de contexto.
+# Task Atual: Interoperabilidade e Composição (v0.1.4)
+**Status**: Planejamento
+**Objetivo**: Criar pontes para Result (Kotlin), Retrofit e Ktor, além de combinadores de estados.
 
 ## Checklist
-- [ ] Refinar estrutura de ResponseMetadata (Grill-me)
-- [ ] Definir persistência de metadados durante transformações (.map)
-- [ ] Implementar PaginationMetadata (currentPage, hasMore, totalItems)
-- [ ] Implementar Timestamping automático
-- [ ] Criar PRD da v0.1.3
+- [x] Refinar design de Interoperabilidade (Grill-me)
+- [x] Criar PRD da v0.1.4 (.gemini/docs/PRD-004.md)
+- [ ] Implementar bridge de Result<T> no :core
+- [ ] Configurar novos módulos :retrofit e :ktor
+- [ ] Implementar bridge de retrofit2.Response para Response<T>
+- [ ] Implementar bridge de Ktor HttpResponse para Response<T>
+- [ ] Criar operadores de Composição (zipResponse/combineResponse)

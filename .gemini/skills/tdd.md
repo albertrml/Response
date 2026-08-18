@@ -23,6 +23,7 @@ Este protocolo define como o agente deve executar o loop de TDD usando as ferram
 ### 🔵 Passo 3: REFACTOR (Limpeza)
 1.  Melhore o código sem alterar o comportamento.
 2.  Execute os testes novamente para garantir que nada quebrou.
+3.  **Cobertura**: Verifique se a cobertura de testes da nova funcionalidade atinge pelo menos 95%.
 
 ## 🛠️ Ferramentas Obrigatórias
 - **`gradle_build`**: Sempre use para validar o estado. Nunca assuma que o código funciona.

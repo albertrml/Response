@@ -3,9 +3,10 @@ package br.com.arml.response.core
 import kotlinx.coroutines.flow.*
 
 /**
- * Encapsulates a suspend operation in a [Flow] that emits [Response] states.
+ * Description: Creates a [Flow] that emits [Response.Loading] then the result of [block].
+ * Decisions: Injects [initialData] as cache to enable immediate UI rendering during refresh.
  * @param initialData Optional data to be used as cache in the [Response.Loading] and [Response.Failure] states.
- * @param initialMetadata Optional metadata to be carried during the transition.
+ * @param initialMetadata Optional metadata to be carried during the initial [Response.Loading] state.
  */
 fun <T> asResponseFlow(
     initialData: T? = null,
@@ -21,7 +22,8 @@ fun <T> asResponseFlow(
 }.onStart { emit(Response.Loading(previousData = initialData, metadata = initialMetadata)) }
 
 /**
- * Transforms a common [Flow] into a [Flow] of [Response].
+ * Description: Converts a regular [Flow] into a [Flow] of [Response].
+ * Decisions: Uses [initialData] as fallback for Loading/Failure states.
  * @param initialData Optional data to be used as cache in the [Response.Loading] and [Response.Failure] states.
  * @param initialMetadata Optional metadata to be carried during the initial [Response.Loading] state.
  */
@@ -38,10 +40,10 @@ fun <T> Flow<T>.asResponseFlow(
 }
 
 /**
- * Executes a suspend operation and returns a [Response].
- * Useful for single-shot operations that don't require a Flow.
+ * Description: Executes a suspend operation and returns a [Response]. Useful for single-shot operations that
+ * don't require a Flow.
+ * Decisions: Ensures that [Response.Success] always has a [ResponseMetadata] (with timestamp) for traceability.
  * @param metadata Optional metadata to associate with the resulting [Response].
- * If null, a default [ResponseMetadata] with the current timestamp will be created on Success.
  */
 suspend fun <T> asResponse(
     metadata: ResponseMetadata? = null,
@@ -51,3 +53,27 @@ suspend fun <T> asResponse(
 } catch (e: Throwable) {
     Response.Failure(error = e, metadata = metadata)
 }
+
+/**
+ * Description: Converts a Kotlin [Result] into a [Response].
+ * Decisions: Mails the [Throwable] from Result directly into our Failure state.
+ * @param metadata Optional metadata to associate with the resulting [Response].
+ */
+fun <T> Result<T>.asResponse(metadata: ResponseMetadata? = null): Response<T> {
+    return fold(
+        onSuccess = { Response.Success(it, metadata ?: ResponseMetadata()) },
+        onFailure = { Response.Failure(error = it, metadata = metadata) }
+    )
+}
+
+/**
+ * Description: Converts a [Flow] of [Result] into a [Flow] of [Response].
+ * Decisions: Symmetric naming with standard asResponseFlow. Use @JvmName to avoid signature clash.
+ */
+@JvmName("asResponseResultFlow")
+fun <T> Flow<Result<T>>.asResponseFlow(
+    initialData: T? = null,
+    initialMetadata: ResponseMetadata? = null
+): Flow<Response<T>> = this
+    .map { it.asResponse() }
+    .onStart { emit(Response.Loading(initialData, initialMetadata)) }

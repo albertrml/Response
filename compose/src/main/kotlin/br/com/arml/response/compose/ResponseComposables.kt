@@ -9,14 +9,15 @@ import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
- * A Composable that handles the rendering and side effects of a [Response].
- *
+ * Description: UI Component that handles the rendering and side effects of a [Response].
+ * Decisions: Exposes [metadata] to all slots to allow UIs to show data "freshness" or pagination state.
+ * Implements a small delay for side effects to prevent "action flickering" on fast networks.
  * @param successContent Content to show on [Response.Success].
  * @param loadingContent Content to show on [Response.Loading].
  * @param failureContent Content to show on [Response.Failure].
- * @param actionOnSuccess Side-effect to run once on [Response.Success].
- * @param actionOnFailure Side-effect to run once on [Response.Failure].
- * @param delay Artificial delay for the [LaunchedEffect] (default 500ms).
+ * @param actionOnSuccess Side effect to run once on [Response.Success].
+ * @param actionOnFailure Side effect to run once on [Response.Failure].
+ * @param delay Artificial delay for the [LaunchedEffect] (default 500ms)
  */
 @Composable
 fun <T> Response<T>.ShowResults(

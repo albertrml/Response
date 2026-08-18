@@ -1,10 +1,11 @@
 package br.com.arml.response.core
 
 /**
- * Encapsulates contextual information about a [Response].
+ * Envelope for contextual information about a [Response].
+ * Decisions: Kept separate from the data model to avoid polluting domain models with infrastructure concerns.
  *
- * @property timestamp The exact moment (in milliseconds) when the data was captured.
- * @property policies A list of strategies applied to this data (e.g., Pagination, Sync).
+ * @property timestamp Capture moment. Essential for cache expiration logic.
+ * @property policies List of strategies (Pagination, Sync) applied to this data.
  * @property extra Open map for custom contextual data.
  */
 data class ResponseMetadata(
@@ -13,7 +14,8 @@ data class ResponseMetadata(
     val extra: Map<String, Any> = emptyMap()
 ) {
     /**
-     * Helper to find a specific policy by type.
+     * Extraction Utility: Find a policy by its type.
+     * Decisions: Provides safe, reified access to pluggable strategies.
      */
     inline fun <reified P : ResponsePolicy> findPolicy(): P? {
         return policies.filterIsInstance<P>().firstOrNull()

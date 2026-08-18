@@ -22,3 +22,5 @@ dependencyResolutionManagement {
 rootProject.name = "Response"
 include(":core")
 include(":compose")
+include(":retrofit")
+include(":ktor")

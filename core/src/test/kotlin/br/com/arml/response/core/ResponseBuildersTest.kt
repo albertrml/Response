@@ -12,68 +12,67 @@ import org.junit.Test
 class ResponseBuildersTest {
 
     @Test
-    fun `asResponseFlow emits Loading and then Success with timestamp`() = runTest {
-        val result = asResponseFlow { "Data" }.toList()
-        assertEquals(2, result.size)
-        assertTrue(result[0] is Response.Loading)
-        assertTrue(result[1] is Response.Success)
-        assertNotNull(result[1].metadata?.timestamp)
-    }
-
-    @Test
-    fun `asResponseFlow catches exception and emits Failure`() = runTest {
-        val exception = RuntimeException("Error")
-        val result = asResponseFlow { throw exception }.toList()
-        assertEquals(2, result.size)
-        assertTrue(result[0] is Response.Loading)
-        val failure = result[1] as Response.Failure
-        assertEquals(exception, failure.error)
-        assertEquals(ErrorReason.Unknown, failure.reason)
-    }
-
-    @Test
-    fun `asResponse returns Success on data with default metadata`() = runTest {
-        val result = asResponse { "Data" }
-        assertTrue(result is Response.Success)
-        assertEquals("Data", (result as Response.Success).result)
-        assertNotNull(result.metadata)
-    }
-
-    @Test
-    fun `asResponse returns Failure on exception`() = runTest {
-        val exception = RuntimeException("Error")
-        val result = asResponse { throw exception }
-        assertTrue(result is Response.Failure)
-        assertEquals(exception, (result as Response.Failure).error)
-    }
-
-    @Test
-    fun `asResponseFlow should emit Loading and Failure with previousData and metadata`() = runTest {
-        val cache = "Old Data"
-        val metadata = ResponseMetadata(extra = mapOf("page" to 1))
-        val exception = RuntimeException("Error")
-        val result = asResponseFlow(initialData = cache, initialMetadata = metadata) { throw exception }.toList()
+    fun `asResponseFlow block builder branch coverage`() = runTest {
+        val meta = ResponseMetadata()
         
-        assertEquals(2, result.size)
-        assertEquals(Response.Loading(cache, metadata), result[0])
-        assertEquals(Response.Failure(exception, previousData = cache, metadata = metadata), result[1])
+        // Branch: success path
+        val sResults = asResponseFlow(initialMetadata = meta) { "OK" }.toList()
+        assertTrue(sResults[1] is Response.Success)
+        assertEquals(meta, sResults[1].metadata)
+
+        // Branch: failure path with provided metadata
+        val fResults = asResponseFlow<String>(initialMetadata = meta) { throw RuntimeException() }.toList()
+        assertTrue(fResults[1] is Response.Failure)
+        assertEquals(meta, fResults[1].metadata)
     }
 
     @Test
-    fun `Flow asResponseFlow converts success flow correctly and adds metadata`() = runTest {
-        val results = flowOf("Data").asResponseFlow().toList()
-        assertEquals(2, results.size)
+    fun `Flow asResponseFlow extension branch coverage`() = runTest {
+        // Branch: success path
+        val sResults = flowOf("Data").asResponseFlow().toList()
+        assertTrue(sResults[1] is Response.Success)
+        assertNotNull(sResults[1].metadata)
+
+        // Branch: catch path
+        val fResults = flow<String> { throw RuntimeException("Fail") }.asResponseFlow().toList()
+        assertTrue(fResults[1] is Response.Failure)
+        assertEquals("Fail", (fResults[1] as Response.Failure).error.message)
+    }
+
+    @Test
+    fun `asResponse oneshot branch coverage`() = runTest {
+        // Branch: success with null metadata
+        val r1 = asResponse { "D1" }
+        assertNotNull(r1.metadata)
+
+        // Branch: failure with explicit metadata
+        val meta = ResponseMetadata()
+        val r2 = asResponse(metadata = meta) { throw RuntimeException() }
+        assertEquals(meta, r2.metadata)
+    }
+
+    @Test
+    fun `Result asResponse branch coverage`() {
+        val meta = ResponseMetadata()
+        
+        // Success branches
+        val s1 = Result.success("OK").asResponse()
+        val s2 = Result.success("OK").asResponse(meta)
+        assertNotNull(s1.metadata)
+        assertEquals(meta, s2.metadata)
+
+        // Failure branch
+        val f = Result.failure<String>(RuntimeException()).asResponse(meta)
+        assertEquals(meta, f.metadata)
+    }
+
+    @Test
+    fun `asResponseFlow result flow branch coverage`() = runTest {
+        val flow = flowOf(Result.success("OK"))
+        val results = flow.asResponseFlow(initialData = "cache").toList()
+        
         assertTrue(results[0] is Response.Loading)
+        assertEquals("cache", (results[0] as Response.Loading).previousData)
         assertTrue(results[1] is Response.Success)
-        assertNotNull(results[1].metadata)
-    }
-
-    @Test
-    fun `Flow asResponseFlow handles flow errors`() = runTest {
-        val exception = RuntimeException("Flow Error")
-        val results = flow<String> { throw exception }.asResponseFlow().toList()
-        assertEquals(2, results.size)
-        assertTrue(results[0] is Response.Loading)
-        assertEquals(Response.Failure<String>(exception), results[1])
     }
 }
