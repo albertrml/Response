@@ -2,7 +2,7 @@
 
 Este documento auxilia na atualização de versões legadas ou pré-lançamentos para a versão atual da API.
 
-## v0.1.0 (Refatoração Multi-modular)
+## v0.1.0 (Refatoração Multimodular)
 
 A versão 0.1.0 introduziu uma mudança estrutural significativa. Se você usava a API antes da separação em módulos, siga estes passos:
 
@@ -16,9 +16,9 @@ Antigamente existia apenas um artefato. Agora você deve escolher entre o núcle
 ### 2. Renomeação de Pacotes
 Os pacotes foram renomeados para evitar conflitos técnicos:
 
-| Classe/Objeto | Antigo Pacote | Novo Pacote |
-| :--- | :--- | :--- |
-| `Response` | `br.com.arml.core.response` | `br.com.arml.response.core` |
+| Classe/Objeto | Antigo Pacote                  | Novo Pacote                    |
+|:--------------|:-------------------------------|:-------------------------------|
+| `Response`    | `br.com.arml.core.response`    | `br.com.arml.response.core`    |
 | `ShowResults` | `br.com.arml.core.response.ui` | `br.com.arml.response.compose` |
 
 ### 3. Gradle (Version Catalog)

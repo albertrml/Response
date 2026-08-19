@@ -42,4 +42,4 @@ fun `checkout deve chamar processPayment no serviço de pagamento`() {
 - O teste quebra ao renomear uma variável interna, mesmo que o resultado final seja o mesmo.
 
 ## 🧠 Regra de Ouro
-Se você mudar a implementação interna de uma função e o teste quebrar (sem que o comportamento final tenha mudado), seu teste está **mal projetado**. Teste o **contrato**, não o algoritmo.
+Se você mudar a implementação interna de uma função e o teste quebrar (sem que o comportamento final tenha mudado), o seu teste está **mal projetado**. Teste o **contrato**, não o algoritmo.

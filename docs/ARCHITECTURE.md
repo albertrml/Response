@@ -30,7 +30,7 @@ graph TD
 O coração da API é a capacidade de reter o último sucesso conhecido. Isso é implementado no `:core` e propagado automaticamente através da extensão `.withCache()`. 
 
 ### Semantic Error Mapping
-Utilizamos a interface `ErrorReason` para desacoplar a UI de implementações de rede ou persistência. Isso permite que a biblioteca seja usada em qualquer contexto (Mobile, Desktop, Server) mantendo a mesma semântica de erro.
+Utilizamos a interface `ErrorReason` para desacoplar a UI de implementações de rede ou persistência. Isso permite que a biblioteca seja usada em qualquer contexto (Mobile, Desktop, Server) mantendo a semântica de erro.
 
 ### Pluggable Policy Architecture
 O sistema de metadados foi desenhado seguindo o padrão de **Composição sobre Herança**. Através da interface `ResponsePolicy`, desenvolvedores podem anexar múltiplas estratégias simultâneas ao envelope de metadados, como `PagePaginationPolicy` e `SyncPolicy`. Isso garante que a biblioteca seja agnóstica em relação à estratégia de dados do servidor.

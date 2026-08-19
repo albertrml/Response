@@ -3,9 +3,9 @@
 Este documento descreve os princípios de Engenharia de Software e padrões de design aplicados na construção da Response API.
 
 ## 1. Imutabilidade e Sealed Hierarchy
-Toda estrutura de dados na API deve ser imutável para garantir previsibilidade e performance no Compose.
+Toda a estrutura de dados na API deve ser imutável para garantir previsibilidade e performance no Compose.
 - `Success`, `Loading` e `Failure` são `data classes`.
-- **Por que?** Facilita o uso do método `.copy()` e garante que o compilador do Compose identifique mudanças de estado com precisão.
+- **Por quê?** Facilita o uso do método `.copy()` e garante que o compilador do Compose identifique mudanças de estado com precisão.
 
 ## 2. State Recovery (Princípio da Continuidade)
 Diferente de wrappers comuns, a Response API foca na continuidade da experiência do usuário.
@@ -15,7 +15,7 @@ Diferente de wrappers comuns, a Response API foca na continuidade da experiênci
 ## 3. Semantic Error Reasoning
 Evitamos o acoplamento da UI com tipos de `Exception`.
 - A API mapeia falhas para `ErrorReason` (`Network`, `Server`, `Business`, etc).
-- **Por que?** Permite que a camada de UI tome decisões de negócio (ex: retry, fallback) sem precisar conhecer bibliotecas de rede ou banco de dados.
+- **Por quê?** Permite que a camada de UI tome decisões de negócio (ex: retry, fallback) sem precisar conhecer bibliotecas de rede ou banco de dados.
 
 ## 4. Robustez com Throwable
 A biblioteca utiliza `Throwable` como base para todos os erros.

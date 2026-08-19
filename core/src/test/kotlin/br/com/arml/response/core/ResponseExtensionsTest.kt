@@ -42,8 +42,8 @@ class ResponseExtensionsTest {
         val metadata = ResponseMetadata(extra = mapOf("id" to "123"))
         val flow = flowOf(
             Response.Success("First", metadata),
-            Response.Loading<String>(),
-            Response.Failure<String>(Exception())
+            Response.Loading(),
+            Response.Failure(Exception())
         ).withCache()
         
         val results = flow.toList()
@@ -97,8 +97,8 @@ class ResponseExtensionsTest {
     @Test
     fun `zipWith cache logic coverage`() {
         val s1 = Response.Success(10)
-        val f1 = Response.Failure<Int>(RuntimeException(), previousData = 5)
-        val l1 = Response.Loading<Int>(previousData = 2)
+        val f1 = Response.Failure(RuntimeException(), previousData = 5)
+        val l1 = Response.Loading(previousData = 2)
 
         // Zip two states with cache
         val result = f1.zipWith(l1) { a, b -> a + b }

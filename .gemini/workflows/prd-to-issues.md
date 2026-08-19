@@ -5,7 +5,7 @@ description: Quebra um PRD em tarefas técnicas acionáveis dentro do Roadmap e 
 
 # PRD para Tasks Técnicas
 
-Este protocolo define como transformar um documento de requisitos (PRD) em um plano de ataque técnico.
+Este protocolo define como transformar um documento de requisitos (PRD) num plano de ataque técnico.
 
 ## 🔄 O Processo
 
@@ -16,7 +16,7 @@ Localize o PRD em `.gemini/docs/PRD-[ID].md`. Se não existir, use a skill `writ
 Quebre o PRD em fatias verticais. Cada fatia deve ser:
 - **Independente**: Pode ser testada e validada sozinha.
 - **Completa**: Atravessa todas as camadas (Data -> ViewModel -> UI).
-- **Pequena**: Deve ser realizável em uma única sessão de codificação.
+- **Pequena**: Deve ser realizável numa única sessão de codificação.
 
 ### 3. Atualização do Ecossistema .gemini
 Para cada fatia identificada:

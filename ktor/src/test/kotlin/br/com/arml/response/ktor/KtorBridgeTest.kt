@@ -1,8 +1,10 @@
 package br.com.arml.response.ktor
 
 import br.com.arml.response.core.ErrorReason
-import br.com.arml.response.core.Response
 import br.com.arml.response.core.ResponseMetadata
+import br.com.arml.response.test.assertFailure
+import br.com.arml.response.test.assertLoading
+import br.com.arml.response.test.assertSuccess
 import io.ktor.client.*
 import io.ktor.client.engine.mock.*
 import io.ktor.client.request.*
@@ -10,7 +12,6 @@ import io.ktor.http.*
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.IOException
 
@@ -21,20 +22,34 @@ class KtorBridgeTest {
         val meta = ResponseMetadata()
         val client = HttpClient(MockEngine { respond("OK") })
 
-        val r1 = client.get("/").asResponse<String>()
-        val r2 = client.get("/").asResponse<String>(metadata = meta)
-
-        assertTrue(r1 is Response.Success)
-        assertEquals(meta, r2.metadata)
+        with(client){
+            get("/").apply {
+                asResponse<String>().assertSuccess()
+                asResponse<String>(metadata = meta).assertSuccess { _, metadata ->
+                    assertEquals(meta, metadata)
+                }
+            }
+        }
     }
 
     @Test
     fun `HttpResponse asResponse Parsing Error`() = runTest {
         val client = HttpClient(MockEngine { respond("OK") })
-        // Conversion from "OK" to Int fails
-        val r = client.get("/").asResponse<Int>()
-        assertTrue(r is Response.Failure)
-        assertEquals(ErrorReason.Unknown, (r as Response.Failure).reason)
+        client
+            .get("/")
+            .asResponse<Int>()
+            .assertFailure(ErrorReason.Unknown)
+    }
+
+    @Test
+    fun `HttpResponse asResponse Error branches with cache`() = runTest {
+        val cache = "KtorCacheValue"
+        val client = HttpClient(MockEngine { respond("Error", HttpStatusCode.BadRequest) })
+
+        val r = client.get("/").asResponse<String>(previousData = cache)
+        r.assertFailure(ErrorReason.Client(400)) { _, _, previous, _ ->
+            assertEquals(cache, previous)
+        }
     }
 
     @Test
@@ -48,38 +63,35 @@ class KtorBridgeTest {
             respond("Error", status)
         })
 
-        assertEquals(
-            ErrorReason.Client(400),
-            (client.get("/400").asResponse<String>() as Response.Failure).reason
+        val failureCodes = hashMapOf(
+            "/400" to ErrorReason.Client(400),
+            "/300" to ErrorReason.Unknown,
+            "/500" to ErrorReason.Server(500),
         )
-        assertEquals(
-            ErrorReason.Server(500),
-            (client.get("/500").asResponse<String>() as Response.Failure).reason
-        )
-        assertEquals(
-            ErrorReason.Unknown,
-            (client.get("/300").asResponse<String>() as Response.Failure).reason
-        )
+
+        failureCodes.forEach { (path, reason) ->
+            client.get(path).asResponse<String>().assertFailure(reason)
+        }
     }
 
     @Test
     fun `asKtorResponse Exceptions and Metadata`() = runTest {
         val meta = ResponseMetadata()
-        val r1 = asKtorResponse<String> { throw IOException() }
-        val r2 = asKtorResponse<String>(metadata = meta) { throw IllegalStateException() }
-
-        assertEquals(ErrorReason.Network, (r1 as Response.Failure).reason)
-        assertEquals(ErrorReason.Unknown, (r2 as Response.Failure).reason)
-        assertEquals(meta, r2.metadata)
+        asKtorResponse<String> { throw IOException() }.assertFailure(ErrorReason.Network)
+        asKtorResponse<String>(metadata = meta) { throw IllegalStateException() }.assertFailure(
+            ErrorReason.Unknown
+        ) { _, _, _, m ->
+            assertEquals(meta, m)
+        }
     }
 
     @Test
     fun `asKtorResponseFlow success branch`() = runTest {
         val client = HttpClient(MockEngine { respond("OK") })
-        val results = asKtorResponseFlow<String>(initialData = "Cache") { client.get("/") }.toList()
+        val results = asKtorResponseFlow<String>(initialData = "KtorFlowCache") { client.get("/") }.toList()
 
-        assertTrue(results[1] is Response.Success)
-        assertEquals("Cache", (results[0] as Response.Loading).previousData)
+        results[0].assertLoading { cache, _ -> assertEquals("KtorFlowCache", cache) }
+        results[1].assertSuccess { data, _ -> assertEquals("OK", data) }
     }
 
     @Test

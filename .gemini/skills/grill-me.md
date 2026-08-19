@@ -5,7 +5,7 @@ description: Revisão crítica de design e código. Use para encontrar falhas oc
 
 # Grill-me (Modo Advogado do Diabo)
 
-Seu objetivo é encontrar o que pode dar errado. Não seja complacente.
+O seu objetivo é encontrar o que pode dar errado. Não seja complacente.
 
 ## 🎯 Protocolo de Entrevista
 1.  **Análise de Código**: Antes de perguntar, use `grep` ou `find_usages` para ver como a mudança impacta o resto do projeto.

@@ -29,6 +29,9 @@ dependencies {
     
     // Para UI (Jetpack Compose)
     implementation("br.com.arml.response:response-compose:0.1.3")
+
+    // Para Testes Unitários (v0.1.5+)
+    testImplementation("br.com.arml.response:response-test:0.1.5")
 }
 ```
 

@@ -18,7 +18,7 @@ Este protocolo define como o agente deve executar o loop de TDD usando as ferram
 ### 🟢 Passo 2: GREEN (Implementação Mínima)
 1.  Escreva o código estritamente necessário para passar o teste.
 2.  Use `analyze_file` para garantir que não há erros de sintaxe.
-3.  Execute o build novamente. Se passar, marque como `[x]` no `current_task.md`.
+3.  Execute a build novamente. Se passar, marque como `[x]` no `current_task.md`.
 
 ### 🔵 Passo 3: REFACTOR (Limpeza)
 1.  Melhore o código sem alterar o comportamento.
