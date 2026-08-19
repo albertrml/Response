@@ -6,12 +6,12 @@ plugins {
 
 dependencies {
     api(project(":core"))
-    api(libs.ktor.core)
     
-    testImplementation(project(":test"))
-    testImplementation(libs.ktor.client.mock)
+    // api because we want the consumer to have access to JUnit assertions 
+    // when using our DSL
+    api(libs.junit)
+    
     testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.junit)
     testImplementation(kotlin("test"))
 }
 
@@ -19,7 +19,7 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             from(components["java"])
-            artifactId = "response-ktor"
+            artifactId = "response-test"
         }
     }
 }

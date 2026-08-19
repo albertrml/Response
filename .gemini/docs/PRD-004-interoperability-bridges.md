@@ -13,9 +13,9 @@ Fornecer um conjunto de extensões de "Ponte" (Bridges) que convertam tipos nati
 - **US4 (Combined Flow)**: Como desenvolvedor, quero combinar múltiplos fluxos de `Response` (ex: zip ou combine) de forma que o estado resultante reflita a saúde de todos os fluxos envolvidos.
 
 ## 4. Technical Requirements & Constraints
-- **Multi-module Awareness**: As pontes de Retrofit e Ktor não devem poluir o módulo `:core`. Elas devem ser extensões opcionais ou viver em sub-pacotes/módulos específicos para evitar dependências pesadas e desnecessárias no núcleo.
+- **Multimodule Awareness**: As pontes de Retrofit e Ktor não devem poluir o módulo `:core`. Elas devem ser extensões opcionais ou viver em subpacotes/módulos específicos para evitar dependências pesadas e desnecessárias no núcleo.
 - **Pure Kotlin Core**: O núcleo permanece 100% livre de frameworks.
-- **Auto-Reasoning**: O mapeamento de `ErrorReason` deve ser inteligente (ex: detectar falha de conexão e atribuir `ErrorReason.Network`).
+- **Autorreasoning**: O mapeamento de `ErrorReason` deve ser inteligente (ex: detetar falha de conexão e atribuir `ErrorReason.Network`).
 
 ## 5. Success Metrics
 - Redução de ~60% no boilerplate de Repositórios que usam Retrofit/Ktor com a Response API.

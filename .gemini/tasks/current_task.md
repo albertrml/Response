@@ -1,12 +1,11 @@
-# Task Atual: Interoperabilidade e Composição (v0.1.4)
-**Status**: Planejamento
-**Objetivo**: Criar pontes para Result (Kotlin), Retrofit e Ktor, além de combinadores de estados.
+# Task Atual: Testability DSL (v0.1.5)
+**Status**: Planejamento / Design
+**Objetivo**: Facilitar o teste de ViewModels e Repositórios que utilizam a Response API.
 
 ## Checklist
-- [x] Refinar design de Interoperabilidade (Grill-me)
-- [x] Criar PRD da v0.1.4 (.gemini/docs/PRD-004.md)
-- [ ] Implementar bridge de Result<T> no :core
-- [ ] Configurar novos módulos :retrofit e :ktor
-- [ ] Implementar bridge de retrofit2.Response para Response<T>
-- [ ] Implementar bridge de Ktor HttpResponse para Response<T>
-- [ ] Criar operadores de Composição (zipResponse/combineResponse)
+- [x] Refinar estratégia de isolamento do módulo :test (Grill-me)
+- [x] Criar PRD da v0.1.5 (.gemini/docs/PRD-005-testability-dsl.md)
+- [x] Configurar novo módulo :test no Gradle
+- [x] Implementar Fluent Assertions (assertSuccess, assertFailure, assertLoading)
+- [x] Implementar utilitários para simulação de estados (Mock Helpers)
+- [x] Documentar como testar a API no manual do usuário

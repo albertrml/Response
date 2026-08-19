@@ -9,7 +9,7 @@ Use Mocks apenas nas **fronteiras do sistema**.
 - **Sensores de Hardware**: GPS, Bluetooth, Câmera.
 
 ## ❌ Não use Mocks para:
-- **Suas próprias Data Classes**: Crie instâncias reais.
+- **As suas próprias Data Classes**: Crie instâncias reais.
 - **Classes Utilitárias**: Use a lógica real.
 - **Colaboradores da mesma camada**: Se você está testando um `ViewModel`, não mocke o `Reducer` ou o `State` (use instâncias reais para um teste "Social").
 

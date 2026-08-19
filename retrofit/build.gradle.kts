@@ -8,6 +8,7 @@ dependencies {
     api(project(":core"))
     api(libs.retrofit)
     
+    testImplementation(project(":test"))
     testImplementation(libs.okhttp)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.junit)

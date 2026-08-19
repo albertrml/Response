@@ -5,14 +5,14 @@ Este documento provê uma visão geral dos componentes, estados e relacionamento
 ## 1. Núcleo (Módulo :core)
 
 ### Estados (`Response<T>`)
-| Estado | Tipo | Descrição |
-| :--- | :--- | :--- |
-| `Loading<T>` | `data class` | Operação em andamento. Pode conter `previousData` (cache) e `metadata`. |
-| `Success<T>` | `data class` | Sucesso. Contém o dado resultante (`result`) e `metadata`. |
+| Estado       | Tipo         | Descrição                                                                               |
+|:-------------|:-------------|:----------------------------------------------------------------------------------------|
+| `Loading<T>` | `data class` | Operação em andamento. Pode conter `previousData` (cache) e `metadata`.                 |
+| `Success<T>` | `data class` | Sucesso. Contém o dado resultante (`result`) e `metadata`.                              |
 | `Failure<T>` | `data class` | Falha. Contém o `error: Throwable`, `reason: ErrorReason`, `previousData` e `metadata`. |
 
 ### Metadados e Políticas (`ResponseMetadata.kt`)
-A Response API utiliza um sistema de **Políticas (Policies)** para carregar contexto sem poluir seus modelos.
+A Response API utiliza um sistema de **Políticas (Policies)** para carregar contexto sem poluir os seus modelos.
 - `ResponseMetadata`: Envelope que carrega o `timestamp`, dados `extra` e uma lista de `policies`.
 - `ResponsePolicy`: Interface marcadora para qualquer estratégia (Paginação, Sync, etc).
 - `PagePaginationPolicy`: Implementação para paginação baseada em páginas (`currentPage`, `hasMore`).
@@ -21,7 +21,7 @@ A Response API utiliza um sistema de **Políticas (Policies)** para carregar con
 
 ### Construtores (`ResponseBuilders.kt`)
 - `asResponseFlow { block }`: Cria um `Flow<Response<T>>` que emite `Loading` e depois o resultado.
-- `Flow<T>.asResponseFlow()`: Extensão que converte um fluxo comum em um fluxo de `Response`.
+- `Flow<T>.asResponseFlow()`: Extensão que converte um fluxo comum num fluxo de `Response`.
 - `asResponse { block }`: Função `suspend` que executa o bloco e retorna uma instância única de `Response<T>`.
 
 ### Operadores e Extensões

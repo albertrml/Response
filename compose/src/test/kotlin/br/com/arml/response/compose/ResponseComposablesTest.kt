@@ -13,10 +13,8 @@ class ResponseComposablesTest {
         var metadataReceived: ResponseMetadata? = null
 
         val metadata = ResponseMetadata()
-        val successResponse: Response<String> = Response.Success("Data", metadata)
-        
         // Manual simulation of Composable logic decision branch
-        when (successResponse) {
+        when (val successResponse: Response<String> = Response.Success("Data", metadata)) {
             is Response.Success -> {
                 successData = successResponse.result
                 metadataReceived = successResponse.metadata

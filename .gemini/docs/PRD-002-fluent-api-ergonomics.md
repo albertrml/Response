@@ -4,7 +4,7 @@
 Atualmente, a `Response API` funciona como um snapshot estático. Quando um fluxo transita de `Success` para um novo `Loading` (refresh) ou para `Failure`, os dados anteriores são descartados. Isso força a UI a exibir estados vazios ou "flashes" de carregamento, degradando a UX. Além disso, a manipulação de erros é baseada em exceções brutas, o que é verboso e acoplado à implementação.
 
 ## 2. Proposed Solution
-Transformar a `Response` em um motor de estados resiliente com suporte a **State Recovery** e **Semantic Error Reasoning**. Introduzir uma DSL fluída para manipulação de dados sem boilerplate.
+Transformar a `Response` num motor de estados resiliente com suporte a **State Recovery** e **Semantic Error Reasoning**. Introduzir uma DSL fluída para manipulação de dados sem boilerplate.
 
 ## 3. User Stories
 - **US1 (State Recovery)**: Como desenvolvedor, quero que os estados `Loading` e `Failure` carreguem o `previousData` para manter a UI populada durante atualizações ou falhas temporárias.
